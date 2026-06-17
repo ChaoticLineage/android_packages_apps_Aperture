@@ -94,6 +94,7 @@ import org.lineageos.aperture.ext.setHotPixelMode
 import org.lineageos.aperture.ext.setNoiseReductionMode
 import org.lineageos.aperture.ext.setPadding
 import org.lineageos.aperture.ext.setShadingMode
+import org.lineageos.aperture.ext.setMtk60FpsFix
 import org.lineageos.aperture.ext.setOplusVideoHdrFix
 import org.lineageos.aperture.ext.setSuperSteadyEnabled
 import org.lineageos.aperture.ext.setVideoStabilizationMode
@@ -108,6 +109,7 @@ import org.lineageos.aperture.models.CameraFacing
 import org.lineageos.aperture.models.CameraMode
 import org.lineageos.aperture.models.CameraState
 import org.lineageos.aperture.models.Event
+import org.lineageos.aperture.models.FrameRate
 import org.lineageos.aperture.models.FlashMode
 import org.lineageos.aperture.models.GestureAction
 import org.lineageos.aperture.models.GridMode
@@ -1655,6 +1657,11 @@ open class CameraActivity : AppCompatActivity(R.layout.activity_camera) {
                     if (cameraConfiguration is CameraConfiguration.Video &&
                         cameraConfiguration.videoDynamicRange == VideoDynamicRange.HLG_10_BIT &&
                         cameraConfiguration.needsOplusVideoHdrFix) true else null
+                )
+                .setMtk60FpsFix(
+                    if (cameraConfiguration is CameraConfiguration.Video &&
+                        cameraConfiguration.videoFrameRate == FrameRate.FPS_60 &&
+                        cameraConfiguration.needsMtk60FpsFix) true else null
                 )
                 .setEdgeMode(camera2Options.edgeMode)
                 .setNoiseReductionMode(camera2Options.noiseReductionMode)
