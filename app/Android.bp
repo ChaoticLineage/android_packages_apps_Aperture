@@ -24,8 +24,8 @@ android_app {
     required: [
         "ApertureFrameworksBaseOverlay",
         "ApertureLensLauncher",
-        "initial-package-stopped-states-org.lineageos.aperture",
-        "preinstalled-packages-org.lineageos.aperture",
+        "initial-package-stopped-states-com.android.camera",
+        "preinstalled-packages-com.android.camera",
     ],
 
     static_libs: [
@@ -73,17 +73,17 @@ android_app {
 }
 
 prebuilt_etc {
-    name: "initial-package-stopped-states-org.lineageos.aperture",
+    name: "initial-package-stopped-states-com.android.camera",
     product_specific: true,
     sub_dir: "sysconfig",
-    src: "initial-package-stopped-states-org.lineageos.aperture.xml",
+    src: "initial-package-stopped-states-com.android.camera.xml",
     filename_from_src: true,
 }
 
 prebuilt_etc {
-    name: "preinstalled-packages-org.lineageos.aperture",
+    name: "preinstalled-packages-com.android.camera",
     product_specific: true,
     sub_dir: "sysconfig",
-    src: "preinstalled-packages-org.lineageos.aperture.xml",
+    src: "preinstalled-packages-com.android.camera.xml",
     filename_from_src: true,
 }

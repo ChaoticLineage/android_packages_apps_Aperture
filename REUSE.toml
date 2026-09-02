@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 version = 1
-SPDX-PackageName = "Aperture"
+SPDX-PackageName = "Camera"
 SPDX-PackageSupplier = "The LineageOS Project"
 SPDX-PackageDownloadLocation = "https://github.com/LineageOS/android_packages_apps_Aperture"
 
