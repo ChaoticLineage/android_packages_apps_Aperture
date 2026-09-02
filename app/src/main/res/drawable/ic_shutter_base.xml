@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
      SPDX-FileCopyrightText: The LineageOS Project
+     SPDX-FileCopyrightText: CharaROM Project
      SPDX-License-Identifier: Apache-2.0
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="72dp"
     android:height="72dp"
     android:viewportWidth="72"
@@ -36,8 +38,20 @@
         android:scaleY="1.0">
         <path
             android:name="capture_src"
-            android:fillColor="?attr/colorSecondaryContainer"
             android:fillType="evenOdd"
-            android:pathData="M68 36C68 53.6731 53.6731 68 36 68C18.3269 68 4 53.6731 4 36C4 18.3269 18.3269 4 36 4C53.6731 4 68 18.3269 68 36Z" />
+            android:pathData="M68 36C68 53.6731 53.6731 68 36 68C18.3269 68 4 53.6731 4 36C4 18.3269 18.3269 4 36 4C53.6731 4 68 18.3269 68 36Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:startX="4"
+                    android:startY="4"
+                    android:endX="68"
+                    android:endY="68"
+                    android:type="linear">
+                    <item android:offset="0" android:color="#FFDC143C"/>
+                    <item android:offset="0.5" android:color="#FFC71585"/>
+                    <item android:offset="1" android:color="#FF9370DB"/>
+                </gradient>
+            </aapt:attr>
+        </path>
     </group>
 </vector>

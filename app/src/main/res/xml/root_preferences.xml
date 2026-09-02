@@ -38,7 +38,7 @@
             app:title="@string/leveler_title" />
 
         <Preference
-            app:fragment="org.lineageos.aperture.SettingsActivity$GesturesSettingsFragment"
+            app:fragment="com.android.camera.SettingsActivity$GesturesSettingsFragment"
             app:iconSpaceReserved="false"
             app:title="@string/gestures_title" />
 
@@ -100,7 +100,7 @@
         app:title="@string/advanced_header">
 
         <Preference
-            app:fragment="org.lineageos.aperture.SettingsActivity$ProcessingSettingsFragment"
+            app:fragment="com.android.camera.SettingsActivity$ProcessingSettingsFragment"
             app:iconSpaceReserved="false"
             app:title="@string/processing_title" />
 
