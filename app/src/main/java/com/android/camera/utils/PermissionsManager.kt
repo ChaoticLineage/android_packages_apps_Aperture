@@ -81,17 +81,8 @@ class PermissionsManager(
             }
         }.toTypedArray()
 
-        /**
-         * Permissions needed for location tag in saved photos and videos
-         */
-        private val locationPermissions = arrayOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        )
-
         private fun Permission.toAndroidPermissions() = when (this) {
             Permission.CAMERA -> cameraPermissions
-            Permission.LOCATION -> locationPermissions
         }
     }
 }
