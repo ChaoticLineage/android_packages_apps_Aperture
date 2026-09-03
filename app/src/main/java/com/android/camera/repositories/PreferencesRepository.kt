@@ -250,14 +250,6 @@ class PreferencesRepository(
     ).asPreferenceHolder()
 
     /**
-     * Whether location should be saved.
-     */
-    val saveLocation = primitivePreference<Boolean?>(
-        key = "save_location",
-        defaultValue = null,
-    ).asPreferenceHolder()
-
-    /**
      * Whether shutter sound should be played.
      */
     val shutterSound = primitivePreference(

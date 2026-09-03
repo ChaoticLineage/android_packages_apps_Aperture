@@ -13,9 +13,4 @@ enum class Permission {
      * Camera permission.
      */
     CAMERA,
-
-    /**
-     * Location permission.
-     */
-    LOCATION,
 }

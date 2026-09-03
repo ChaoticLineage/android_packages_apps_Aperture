@@ -123,7 +123,7 @@ import com.android.camera.models.TimerMode
 import com.android.camera.models.VideoDynamicRange
 import com.android.camera.models.VideoMirrorMode
 import com.android.camera.models.VideoStabilizationMode
-import com.android.camera.ui.dialogs.LocationPermissionsDialog
+
 import com.android.camera.ui.dialogs.QrBottomSheetDialog
 import com.android.camera.ui.views.CameraModeSelectorLayout
 import com.android.camera.ui.views.CapturePreviewLayout
@@ -277,23 +277,6 @@ open class CameraActivity : AppCompatActivity(R.layout.activity_camera) {
 
     // Permissions
     private val permissionsManager = PermissionsManager(this)
-
-    private val locationPermissionsDialog by lazy {
-        LocationPermissionsDialog(this).also {
-            it.onResultCallback = { result ->
-                if (result) {
-                    lifecycleScope.launch {
-                        val permissionState = permissionsManager.requestPermission(
-                            Permission.LOCATION
-                        )
-                        viewModel.setSaveLocation(permissionState == PermissionState.GRANTED)
-                    }
-                } else {
-                    viewModel.setSaveLocation(false)
-                }
-            }
-        }
-    }
 
     private val forceTorchSnackbar by lazy {
         Snackbar.make(
@@ -593,15 +576,6 @@ open class CameraActivity : AppCompatActivity(R.layout.activity_camera) {
             }
         }
 
-        // Also collect location
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                permissionsManager.withPermissionGranted(Permission.LOCATION) {
-                    viewModel.location.collect()
-                }
-            }
-        }
-
         // Check for permissions
         lifecycleScope.launch {
             permissionsManager.permissionStateFlow(
@@ -610,10 +584,7 @@ open class CameraActivity : AppCompatActivity(R.layout.activity_camera) {
                 if (permissionState != PermissionState.GRANTED) {
                     when (permissionsManager.requestPermission(Permission.CAMERA)) {
                         PermissionState.GRANTED -> {
-                            // This is a good time to ask the user for location permissions
-                            if (viewModel.saveLocation.value == null) {
-                                locationPermissionsDialog.show()
-                            }
+                            // Camera permission granted
                         }
 
                         else -> {

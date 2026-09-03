@@ -157,7 +157,6 @@ class SettingsActivity : AppCompatActivity(R.layout.activity_settings) {
         private val photoCaptureMode by lazy {
             findPreference<ListPreference>("photo_capture_mode")!!
         }
-        private val saveLocation by lazy { findPreference<SwitchPreference>("save_location") }
         private val shutterSound by lazy { findPreference<SwitchPreference>("shutter_sound") }
 
         private val photoCaptureModePreferenceChangeListener =
@@ -179,32 +178,6 @@ class SettingsActivity : AppCompatActivity(R.layout.activity_settings) {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             super.onCreatePreferences(savedInstanceState, rootKey)
 
-            saveLocation?.let {
-                // Reset location back to off if permissions aren't granted
-                it.isChecked = it.isChecked && permissionsManager.permissionState(
-                    Permission.LOCATION
-                ) == PermissionState.GRANTED
-                it.onPreferenceChangeListener =
-                    Preference.OnPreferenceChangeListener { _, newValue ->
-                        if (newValue as Boolean) {
-                            viewLifecycleOwner.lifecycleScope.launch {
-                                val result = permissionsManager.requestPermission(
-                                    Permission.LOCATION
-                                )
-
-                                if (result != PermissionState.GRANTED) {
-                                    saveLocation?.isChecked = false
-                                    Toast.makeText(
-                                        requireContext(),
-                                        getString(R.string.save_location_toast),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        }
-                        true
-                    }
-            }
             shutterSound?.isVisible = !CameraSoundsUtils.mustPlaySounds
 
             // Photo capture mode

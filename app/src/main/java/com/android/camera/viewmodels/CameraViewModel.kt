@@ -9,7 +9,7 @@ import android.animation.ValueAnimator
 import android.app.Application
 import android.content.Intent
 import android.content.IntentFilter
-import android.location.LocationManager
+
 import android.net.Uri
 import android.os.BatteryManager
 import android.os.Build
@@ -28,7 +28,7 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
-import androidx.core.location.LocationRequestCompat
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
@@ -60,7 +60,7 @@ import kotlinx.coroutines.sync.Mutex
 import com.android.camera.ext.applicationContext
 import com.android.camera.ext.broadcastReceiverFlow
 import com.android.camera.ext.flashMode
-import com.android.camera.ext.locationFlow
+
 import com.android.camera.ext.mapToRange
 import com.android.camera.ext.next
 import com.android.camera.ext.nextPowerOfTwo
@@ -101,7 +101,6 @@ import kotlin.reflect.safeCast
  */
 class CameraViewModel(application: Application) : CameraBaseViewModel(application) {
     // System services
-    private val locationManager = applicationContext.getSystemService(LocationManager::class.java)
     private val powerManager = applicationContext.getSystemService(PowerManager::class.java)
 
     // Camera sounds
@@ -498,36 +497,6 @@ class CameraViewModel(application: Application) : CameraBaseViewModel(applicatio
             viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             replay = 1
-        )
-
-    @Suppress("MissingPermission")
-    val location = locationManager.locationFlow(
-        LocationRequestCompat.Builder(1000)
-            .setMinUpdateDistanceMeters(1f)
-            .setQuality(LocationRequestCompat.QUALITY_BALANCED_POWER_ACCURACY)
-            .build()
-    )
-        .flowOn(Dispatchers.IO)
-        .stateIn(
-            viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null
-        )
-
-    val saveLocation = combine(
-        preferencesRepository.saveLocation,
-        inSingleCaptureMode,
-    ) { saveLocation, inSingleCaptureMode ->
-        when (inSingleCaptureMode) {
-            true -> false
-            false -> saveLocation
-        }
-    }
-        .flowOn(Dispatchers.IO)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = preferencesRepository.saveLocation,
         )
 
     private val batteryIntent = applicationContext.broadcastReceiverFlow(
@@ -1021,9 +990,6 @@ class CameraViewModel(application: Application) : CameraBaseViewModel(applicatio
         val outputOptions = StorageUtils.getPhotoMediaStoreOutputOptions(
             applicationContext.contentResolver,
             ImageCapture.Metadata().apply {
-                if (!inSingleCaptureMode.value) {
-                    location = this@CameraViewModel.location.value
-                }
                 if (cameraFacing.value == CameraFacing.FRONT) {
                     isReversedHorizontal = preferencesRepository.photoFfcMirror.value
                 }
@@ -1090,7 +1056,7 @@ class CameraViewModel(application: Application) : CameraBaseViewModel(applicatio
         val outputOptions = StorageUtils.getVideoMediaStoreOutputOptions(
             applicationContext.contentResolver,
             System.currentTimeMillis(),
-            location.value.takeUnless { inSingleCaptureMode.value }
+            null
         )
 
         // Play shutter sound
@@ -1498,10 +1464,6 @@ class CameraViewModel(application: Application) : CameraBaseViewModel(applicatio
      */
     fun zoomOut() = zoomState.value?.zoomRatio?.let {
         smoothZoom(it.previousPowerOfTwo())
-    }
-
-    fun setSaveLocation(saveLocation: Boolean?) {
-        preferencesRepository.saveLocation.value = saveLocation
     }
 
     fun onQrDialogDismissed() {
